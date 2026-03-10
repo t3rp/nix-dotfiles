@@ -58,6 +58,29 @@ confirm() {
     [[ "$response" =~ ^[Yy]$ ]]
 }
 
+# Clean up old Nix backup files before installation
+cleanup_nix_backup() {
+    local original="$1"
+    local backup="${original}.backup-before-nix"
+    
+    # Skip if backup doesn't exist
+    [ -f "$backup" ] || return 0
+    
+    log_warning "Found old backup: $backup"
+    
+    if confirm "Remove it to let Nix create a fresh backup?" "y"; then
+        log_info "Creating safety backup in /tmp..."
+        sudo cp "$backup" "/tmp/$(basename "$backup").$(date +%s)" 2>/dev/null || log_warning "Could not safeguard to /tmp"
+        
+        log_info "Removing: $backup"
+        sudo rm "$backup"
+        log_success "Removed $backup"
+    else
+        log_error "Cannot proceed. Please manually run: sudo rm $backup"
+        return 1
+    fi
+}
+
 echo -e "${RED}"
 cat << "EOF"
 
@@ -75,8 +98,41 @@ Home Manager Bootstrap Script...
 EOF
 echo -e "${NC}"
 
-# Step 1: Check and install Nix
-log_info "Step 1/5: Checking for Nix installation..."
+# Step 1: Clean up old Nix backup files
+log_info "Step 1/6: Checking for conflicting Nix backup files..."
+
+# Array of rc files that Nix will try to back up
+RC_FILES=(
+    "/etc/bashrc"
+    "/etc/bash.bashrc"
+    "/etc/zshrc"
+    "/etc/zsh/zshrc"
+    "/etc/profile.d/nix.sh"
+)
+
+ALL_CLEANUP_SUCCESS=true
+CLEANED_ANY=false
+
+for rc_file in "${RC_FILES[@]}"; do
+    if [ -f "${rc_file}.backup-before-nix" ]; then
+        cleanup_nix_backup "$rc_file" || ALL_CLEANUP_SUCCESS=false
+        CLEANED_ANY=true
+    fi
+done
+
+if [ "$ALL_CLEANUP_SUCCESS" = false ]; then
+    log_error "Cleanup of some backup files failed. Please resolve manually before continuing."
+    exit 1
+fi
+
+if [ "$CLEANED_ANY" = true ]; then
+    log_success "All conflicting backups cleaned up successfully"
+else
+    log_success "No conflicting backup files found"
+fi
+
+# Step 2: Check and install Nix
+log_info "Step 2/6: Checking for Nix installation..."
 
 if command_exists nix; then
     log_success "Nix is already installed"
@@ -85,25 +141,48 @@ else
     log_warning "Nix is not installed"
     
     if confirm "Do you want to install Nix now?" "y"; then
+        log_info "Stopping any running Nix processes..."
+        sudo systemctl stop nix-daemon.service 2>/dev/null || true
+        sudo systemctl stop nix-daemon.socket 2>/dev/null || true
+        sleep 2
+        
         log_info "Installing Nix (multi-user installation)..."
         
         # Install Nix with flakes enabled from the start
         sh <(curl -L https://nixos.org/nix/install) --daemon --yes
         
-        # Source nix for current session
+        # Source nix for current session - try multiple approaches
+        log_info "Setting up Nix environment in current shell..."
+        
+        # Try the standard nix-daemon profile
         if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
             . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
         fi
         
-        log_success "Nix installed successfully"
+        # If nix still not found, manually add to PATH
+        if ! command_exists nix; then
+            log_info "Manually adding Nix to PATH..."
+            export PATH="/nix/var/nix/profiles/default/bin:$PATH"
+            export PATH="/nix/var/nix/profiles/default/sbin:$PATH"
+        fi
+        
+        # Verify nix is now available
+        if command_exists nix; then
+            log_success "Nix installed successfully"
+            nix --version
+        else
+            log_error "Nix installation completed but nix command not found in PATH"
+            log_error "Please restart your shell or run: source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh"
+            exit 1
+        fi
     else
         log_error "Nix is required. Please install it manually or run this script again."
         exit 1
     fi
 fi
 
-# Step 2: Enable Nix Flakes
-log_info "Step 2/5: Configuring Nix with flakes support..."
+# Step 3: Enable Nix Flakes
+log_info "Step 3/6: Configuring Nix with flakes support..."
 
 NIX_CONFIG_DIR="$HOME/.config/nix"
 NIX_CONFIG_FILE="$NIX_CONFIG_DIR/nix.conf"
@@ -120,8 +199,8 @@ else
     log_success "Flakes enabled in $NIX_CONFIG_FILE"
 fi
 
-# Step 3: Install Git if needed
-log_info "Step 3/5: Checking for Git installation..."
+# Step 4: Install Git if needed
+log_info "Step 4/6: Checking for Git installation..."
 
 if ! command_exists git; then
     log_warning "Git is not installed"
@@ -138,8 +217,8 @@ else
     log_success "Git is already installed"
 fi
 
-# Step 4: Clone or update dotfiles repository
-log_info "Step 4/5: Setting up dotfiles repository..."
+# Step 5: Clone or update dotfiles repository
+log_info "Step 5/6: Setting up dotfiles repository..."
 
 if [ -d "$DOTFILES_DIR" ]; then
     log_warning "Dotfiles directory already exists: $DOTFILES_DIR"
@@ -171,8 +250,8 @@ fi
 # Navigate to dotfiles directory
 cd "$DOTFILES_DIR"
 
-# Step 5: Apply Home Manager configuration
-log_info "Step 5/5: Setting up Home Manager..."
+# Step 6: Apply Home Manager configuration
+log_info "Step 6/6: Setting up Home Manager..."
 
 # Update username in configuration files if needed
 log_info "Checking username configuration..."
