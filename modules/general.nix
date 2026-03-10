@@ -20,7 +20,7 @@
     liberation_ttf # base fonts
     jq # JSON processor
     xdg-user-dirs     # for xdg-user-dir command
-    neofetch # for reddit points
+    fastfetch # system information tool
     adwaita-qt # Adwaita dark theme for QT
     zip # zip/unzip
     xz # xz compression
@@ -69,7 +69,7 @@
     python3 # Python 3, latest stable version
     obsidian # A note-taking and knowledge management application
     spotify # A digital music service that gives you access to millions of songs
-    bitwarden # A password manager
+    bitwarden-desktop # A password manager
     firefox # A web browser
     slack # A collaboration hub
     zoom-us # A video conferencing tool
