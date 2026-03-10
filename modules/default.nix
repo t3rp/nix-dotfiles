@@ -10,7 +10,6 @@
   # in the current home.nix configuration. Use whichever approach you prefer.
   
   imports = [
-    ./tmux.nix
-    ./alacritty.nix
+    ./git.nix
   ];
 }
