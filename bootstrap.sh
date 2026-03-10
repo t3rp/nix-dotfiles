@@ -283,9 +283,9 @@ log_success "Flake inputs updated and locked"
 # Build and activate Home Manager configuration
 log_info "Building and activating Home Manager configuration..."
 log_warning "This may take several minutes on first run..."
-# First time setup - need to use the home-manager from the flake
-nix run home-manager/master -- switch --flake ".#$USERNAME"
+# First time setup - use backup mode to avoid clobbering existing dotfiles
+nix run home-manager/master -- switch -b backup --flake ".#$USERNAME"
 log_success "Home Manager configuration activated!"
 log_info "Configuration location: $DOTFILES_DIR"
-log_info "To apply changes: cd $DOTFILES_DIR && home-manager switch --flake .#$USERNAME"
+log_info "To apply changes: cd $DOTFILES_DIR && home-manager switch -b backup --flake .#$USERNAME"
 echo ""

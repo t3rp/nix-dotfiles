@@ -25,18 +25,6 @@ let
   };
 in
 {
-  # Do shell scripts
-  home.packages = with pkgs; [
-    (writeShellScriptBin "sway-tree" (builtins.readFile ../scripts/sway-tree.sh))
-    (writeShellScriptBin "nixos-update" (builtins.readFile ../scripts/nixos-update.sh))
-    (writeShellScriptBin "nixos-deploy" (builtins.readFile ../scripts/nixos-deploy.sh))
-    (writeShellScriptBin "sway-screenshot" (builtins.readFile ../scripts/sway-screenshot.sh))
-    (writeShellScriptBin "tmux-logging" (builtins.readFile ../scripts/tmux-logging.sh))
-    (writeShellScriptBin "zsh-logging" (builtins.readFile ../scripts/zsh-logging.sh))
-    (writeShellScriptBin "ai-code" (builtins.readFile ../scripts/ai-code.sh))
-    (writeShellScriptBin "ai-chat" (builtins.readFile ../scripts/ai-chat.sh))
-  ];
-  
   # Starship fancy PS1
   programs.starship = {
     enable = true;
