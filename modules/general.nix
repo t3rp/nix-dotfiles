@@ -28,8 +28,6 @@
     zip # zip/unzip
     # Programming
     python3 # Python 3, latest stable version
-    # Browsing
-    chromium # browser
     # Utilities
     feh # image viewer
     jq # JSON processor
