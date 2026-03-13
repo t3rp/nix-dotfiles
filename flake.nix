@@ -16,6 +16,13 @@
   outputs = { nixpkgs, home-manager, ... }:
     let
       system = "x86_64-linux";
+      # USER/HOME come from the invoking shell when run with --impure.
+      username =
+        let u = builtins.getEnv "USER";
+        in if u != "" then u else "terp";
+      homeDirectory =
+        let h = builtins.getEnv "HOME";
+        in if h != "" then h else "/home/${username}";
       pkgs = import nixpkgs {
         inherit system;
         config = {
@@ -26,8 +33,11 @@
     in
     {
       homeConfigurations = {
-        terp = home-manager.lib.homeManagerConfiguration {
+        default = home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
+          extraSpecialArgs = {
+            inherit username homeDirectory;
+          };
           modules = [ ./home.nix ];
         };
       };

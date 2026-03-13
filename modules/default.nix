@@ -7,5 +7,6 @@
     ./general.nix
     ./tmux.nix
     ./shell.nix
+    ./ssh.nix
   ];
 }

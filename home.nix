@@ -1,10 +1,10 @@
-{ config, pkgs, ... }:
+{ config, pkgs, username, homeDirectory, ... }:
 
 {
   # Home Manager Variables
   home = {
-    username = "terp";
-    homeDirectory = "/home/terp";
+    username = username;
+    homeDirectory = homeDirectory;
     stateVersion = "26.05";
 
     # Gnome Fix
