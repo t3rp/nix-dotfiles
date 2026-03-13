@@ -8,7 +8,7 @@ let
   # Configuration path
   tmuxConfigPath = "${config.home.homeDirectory}/.config/tmux/tmux.conf";
 
-  # Clipboard copy
+  # Clipboard copy fix for sway
   clipboard-copy = pkgs.writeShellScript "clipboard-copy" ''
     if [ -n "$WAYLAND_DISPLAY" ]; then
       ${pkgs.wl-clipboard}/bin/wl-copy
@@ -17,7 +17,7 @@ let
     fi
   '';
   
-  # Clipboard paste
+  # Clipboard paste fix for sway
   clipboard-paste = pkgs.writeShellScript "clipboard-paste" ''
     if [ -n "$WAYLAND_DISPLAY" ]; then
       ${pkgs.wl-clipboard}/bin/wl-paste
