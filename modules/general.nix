@@ -10,9 +10,9 @@
     # General
     alacritty # terminal emulator
     neovim # A text editor based on Vim
-    obsidian # A note-taking and knowledge management application
-    spotify # A digital music service that gives you access to millions of songs
-    vlc # A video player
+    # obsidian # A note-taking and knowledge management application
+    # spotify # A digital music service that gives you access to millions of songs
+    # vlc # A video player
     # Comms
     slack # A collaboration hub
     zoom-us # A video conferencing tool
