@@ -6,9 +6,9 @@
 		enableDefaultConfig = false;
 		matchBlocks = {
 			"*" = {
-				addKeysToAgent = "yes";
-				identitiesOnly = true;
-				identityAgent = "$SSH_AUTH_SOCK";
+				# Fixes yubikey SSH "agent refused operation" errors
+				# https://discussion.fedoraproject.org/t/ssh-agent-refused-operation-with-non-resident-pin-protected-key/94206/3
+				identityAgent = "none";
 			};
 
 			"github.com" = {
