@@ -11,8 +11,9 @@
     sessionVariables = {
       # XDG_DATA_DIRS tells applications (including GNOME) where to find data files
       # This includes .desktop files for application discovery
-      # We add the Nix-managed directories so GNOME can find our Nix programs
-      XDG_DATA_DIRS = "${config.home.homeDirectory}/.nix-profile/share:/usr/local/share:/usr/share";
+      # Prepend the Home Manager profile path and preserve existing system paths.
+      # If unset, fall back to common distro defaults plus snapd desktop entries.
+      XDG_DATA_DIRS = "${config.home.profileDirectory}/share\${XDG_DATA_DIRS:+:\${XDG_DATA_DIRS}}";
     };
   };
 
