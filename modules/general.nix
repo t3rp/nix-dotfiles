@@ -14,9 +14,9 @@
     # spotify # A digital music service that gives you access to millions of songs
     # vlc # A video player
     # Comms
-    slack # A collaboration hub
-    zoom-us # A video conferencing tool
-    discord # A VoIP and instant messaging social platform
+    # slack # A collaboration hub
+    # zoom-us # A video conferencing tool
+    # discord # A VoIP and instant messaging social platform
     # Networking
     tcpdump # A powerful command-line packet analyzer
     wireshark # packet analyzer
