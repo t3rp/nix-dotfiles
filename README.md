@@ -17,4 +17,6 @@ Nix Home Manager configuration flake...
 curl -fsSL https://raw.githubusercontent.com/t3rp/nix-dotfiles/main/bootstrap.sh | bash
 # Install development
 curl -fsSL https://raw.githubusercontent.com/t3rp/nix-dotfiles/development/bootstrap.sh | bash
+# Run after install
+nix run home-manager -- switch --flake ~/Development/nix-dotfiles#default
 ```
