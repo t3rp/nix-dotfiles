@@ -37,7 +37,7 @@ in
   # TMUX Configuration
   programs.tmux = {
     enable = true;
-    historyLimit = 1337000;
+    historyLimit = 133700;
     mouse = true;
     keyMode = "vi";
     customPaneNavigationAndResize = true;
@@ -72,12 +72,12 @@ in
       bind r source-file ${tmuxConfigPath} \; display-message "TMUX Configuration Reloaded..."
 
       # Automatic logging
-      set-hook -g session-created 'run tmux-logging'
-      set-hook -g after-new-window 'run tmux-logging' 
-      set-hook -g after-split-window 'run tmux-logging'
+      # set-hook -g session-created 'run tmux-logging'
+      # set-hook -g after-new-window 'run tmux-logging' 
+      # set-hook -g after-split-window 'run tmux-logging'
 
       # Bind Prefix+l to run zsh-logging.sh and show a status message
-      bind l send-keys 'source zsh-logging; tmux display-message "CSV Logging Started..."' C-m
+      # bind l send-keys 'source zsh-logging; tmux display-message "CSV Logging Started..."' C-m
     '';
   };
 }
