@@ -4,7 +4,7 @@
 #   curl -L https://raw.githubusercontent.com/t3rp/nix-dotfiles/main/bootstrap.sh | bash
 #   ./bootstrap.sh
 
-set -e  # Exit on any error
+set -euo pipefail  # Exit on any error, undefined variables, or pipe failures
 
 # Colors for output
 RED='\033[0;31m'
@@ -182,8 +182,8 @@ log_success "Flake inputs updated and locked"
 log_info "Building and activating Home Manager configuration..."
 log_warning "This may take several minutes on first run..."
 # First time setup - need to use the home-manager from the flake
-nix run home-manager/master -- switch --flake ".#$USERNAME"
+nix run home-manager/master -- switch --impure --flake ".#default"
 log_success "Home Manager configuration activated!"
 log_info "Configuration location: $DOTFILES_DIR"
-log_info "To apply changes: cd $DOTFILES_DIR && home-manager switch --flake .#$USERNAME"
+log_info "To apply changes: cd $DOTFILES_DIR && home-manager switch --impure --flake .#default"
 echo ""
