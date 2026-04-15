@@ -8,7 +8,7 @@
 let
   # Shell aliases
   myShellAliases = {
-    hms = "home-manager switch --impure --flake ${config.home.homeDirectory}/Development/nix-dotfiles#default";
+    hms = "home-manager switch --flake ${config.home.homeDirectory}/Development/nix-dotfiles#${config.home.username}";
     urldecode = "python3 -c 'import sys, urllib.parse as ul; print(ul.unquote_plus(sys.stdin.read()))'";
     urlencode = "python3 -c 'import sys, urllib.parse as ul; print(ul.quote_plus(sys.stdin.read()))'";
   };

@@ -1,13 +1,10 @@
-{ config, pkgs, username, homeDirectory, ... }:
+{ config, ... }:
 
 {
-  # Home Manager Variables
   home = {
-    username = username;
-    homeDirectory = homeDirectory;
     stateVersion = "26.05";
 
-    # Gnome Fix
+    # Gnome Appplication Launcher Fix
     sessionVariables = {
       # XDG_DATA_DIRS tells applications (including GNOME) where to find data files
       # This includes .desktop files for application discovery

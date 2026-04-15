@@ -61,5 +61,6 @@
     ranger # A console file manager with VI key bindings
     nnn # terminal file manager
     cdrtools # for creating ISO images (mkisofs)
+    podman-tui # tui for podman
   ];
 }
